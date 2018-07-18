@@ -22,14 +22,14 @@ void centroid_callback(const geometry_msgs::PoseStampedConstPtr &msg){
   goal.target_pose.pose.orientation.w = 1.0;
 
   ROS_INFO("Sending goal");
-  ac->sendGoal(goal);
+  // ac->sendGoal(goal);
 
-  ac->waitForResult();
+  // ac->waitForResult();
 
-  if(ac->getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-    ROS_INFO("Hooray, the base moved to the goal");
-  else
-    ROS_INFO("The base failed to move for some reason");
+  // if(ac->getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+  //   ROS_INFO("Hooray, the base moved to the goal");
+  // else
+  //   ROS_INFO("The base failed to move for some reason");
 
 }
 
@@ -38,7 +38,7 @@ int main(int argc, char** argv){
 
   ros::NodeHandle nh;
 
-  ac = new MoveBaseClient("move_base", true);
+  // ac = new MoveBaseClient("move_base", true);
 
   ros::Subscriber centroid_sub = nh.subscribe("/frontier_goal", 5, centroid_callback);
 

@@ -40,7 +40,7 @@ int main(int argc, char **argv)
   ros::Publisher frontier_pub = robot_exploration.nh.advertise<nav_msgs::OccupancyGrid>("frontiers", 10);
   ros::Publisher goal_pub = robot_exploration.nh.advertise<geometry_msgs::PoseStamped>("/frontier_goal", 1);
 
-  ros::Rate loop_rate(10.0);
+  ros::Rate loop_rate(3.0);
 
   while(ros::ok()){
 
@@ -77,6 +77,7 @@ int main(int argc, char **argv)
     }
 
     frontier_pub.publish(robot_exploration.frontiers_map);
+    ros::spinOnce();
 
     if(!robot_exploration.centroids.empty()){
     geometry_msgs::PoseStamped goal;
@@ -86,12 +87,11 @@ int main(int argc, char **argv)
     goal.pose.position.y = (robot_exploration.centroids[0].first*robot_exploration.map.info.resolution)+robot_exploration.map.info.origin.position.y;
     goal.pose.position.z = 0;
     //ROS_INFO("%d, %f, %f", robot_exploration.centroids[0].first, robot_exploration.map.info.resolution, robot_exploration.map.info.origin.position.x);
-    ROS_INFO("Centroid (x,y) map: %d, %d \t (x,y) rw: %f, %f  ", robot_exploration.centroids[0].first, robot_exploration.centroids[0].second, goal.pose.position.x, goal.pose.position.y);
+    // ROS_INFO("Centroid (x,y) map: %d, %d \t (x,y) rw: %f, %f  ", robot_exploration.centroids[0].first, robot_exploration.centroids[0].second, goal.pose.position.x, goal.pose.position.y);
 
     goal_pub.publish(goal);
     }
 
-    ros::spinOnce();
 
     loop_rate.sleep();
 

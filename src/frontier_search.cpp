@@ -14,7 +14,7 @@ FrontierSearch::FrontierSearch(nav_msgs::OccupancyGrid &map, PoseHandlers::PoseH
   std::vector< std::vector<int> > vectorial_map (width, std::vector<int>(height));
   int data_index = 0;
 
-  std::cout<<"Organizing map over a bidimensional grid-like array"<<std::endl;
+  // std::cout<<"Organizing map over a bidimensional grid-like array"<<std::endl;
     for(int i=0; i<width; i++){
       for(int j=0; j<height; j++){
         vectorial_map[i][j] = map_.data[data_index];
@@ -23,7 +23,7 @@ FrontierSearch::FrontierSearch(nav_msgs::OccupancyGrid &map, PoseHandlers::PoseH
       }
     }
 
-  std::cout<<"Selecting frontier cells"<<std::endl;
+  // std::cout<<"Selecting frontier cells"<<std::endl;
   std::vector< std::pair<int, int> > frontier_cells;
   for(int i=0; i<width; i++){
     for(int j=0; j<height; j++){
@@ -35,7 +35,7 @@ FrontierSearch::FrontierSearch(nav_msgs::OccupancyGrid &map, PoseHandlers::PoseH
     }
   }
 
-  std::cout<<"assignement of frontier cells to groups-frontiers"<<std::endl;
+  // std::cout<<"assignement of frontier cells to groups-frontiers"<<std::endl;
   std::vector<std::vector<std::pair<int, int> > > frontiers;
   for(std::pair<int, int> coords : frontier_cells){
 
@@ -56,7 +56,7 @@ FrontierSearch::FrontierSearch(nav_msgs::OccupancyGrid &map, PoseHandlers::PoseH
       }
   }
 
-  std::cout<<"Frontiers at step 1 (detection): "<<frontiers.size()<<std::endl;
+  // std::cout<<"Frontiers at step 1 (detection): "<<frontiers.size()<<std::endl;
 
 
   for(std::vector<std::vector<std::pair<int, int> > >::iterator it_frontiers = frontiers.begin(); it_frontiers<(frontiers.end()-1);){
@@ -80,7 +80,7 @@ FrontierSearch::FrontierSearch(nav_msgs::OccupancyGrid &map, PoseHandlers::PoseH
     it_frontiers++;
    }
 
-  std::cout<<"Frontiers at step 2 (merging): "<<frontiers.size()<<std::endl;
+  // std::cout<<"Frontiers at step 2 (merging): "<<frontiers.size()<<std::endl;
 
 
 
@@ -91,7 +91,7 @@ FrontierSearch::FrontierSearch(nav_msgs::OccupancyGrid &map, PoseHandlers::PoseH
       i--;
     }
   }
-  std::cout<<"Frontiers at step 3 (filtering): "<<frontiers.size()<<std::endl;
+  // std::cout<<"Frontiers at step 3 (filtering): "<<frontiers.size()<<std::endl;
 
 
   return frontiers;
@@ -148,7 +148,7 @@ bool FrontierSearch::isOnSameFrontier(std::vector<std::pair<int, int> > frontier
  */
 std::vector<std::pair<int, int> > FrontierSearch::getCentroids(std::vector<std::vector<std::pair<int, int> > > frontiers){
 
-  tf::Transform transform = pose_handler_.lookupPose("/map", "/base_link");
+  tf::Transform transform = pose_handler_.lookupPose("/map", "/imu");
   float pose_x = transform.getOrigin().getX();
   float pose_y = transform.getOrigin().getY();
 //  map_pose.first  = (pose_x/map_.info.resolution) + (map_.info.height/2);
@@ -180,7 +180,7 @@ std::vector<std::pair<int, int> > FrontierSearch::getCentroids(std::vector<std::
   }
 
   std::swap(centroids[0], centroids[min_index]);
-  ROS_INFO("Closest centroid (x,y) map: %d, %d \t (x,y) rw pose: %f, %f  ", centroids[0].first, centroids[0].second, pose_x, pose_y);
+  // ROS_INFO("Closest centroid (x,y) map: %d, %d \t (x,y) rw pose: %f, %f  ", centroids[0].first, centroids[0].second, pose_x, pose_y);
 
 
   return centroids;

@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <move_base_msgs/MoveBaseGoal.h>
-#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/PoseArray.h>
 #include <robot_exploration/pose_handler.h>
 #include <robot_exploration/frontier_search.h>
 
@@ -36,9 +36,9 @@ int main(int argc, char **argv)
 
   ROS_INFO("Hello world!");
 
-  ros::Subscriber map_sub = robot_exploration.nh.subscribe("/map", 1, &RobotExploration::map_callback, &robot_exploration);
+  ros::Subscriber map_sub = robot_exploration.nh.subscribe("/costmap_node/costmap/costmap", 1, &RobotExploration::map_callback, &robot_exploration);
   ros::Publisher frontier_pub = robot_exploration.nh.advertise<nav_msgs::OccupancyGrid>("frontiers", 10);
-  ros::Publisher goal_pub = robot_exploration.nh.advertise<geometry_msgs::PoseStamped>("/frontier_goal", 1);
+  ros::Publisher goal_pub = robot_exploration.nh.advertise<geometry_msgs::PoseArray>("/frontier/goal", 1);
 
   ros::Rate loop_rate(3.0);
 
@@ -80,16 +80,22 @@ int main(int argc, char **argv)
     ros::spinOnce();
 
     if(!robot_exploration.centroids.empty()){
-    geometry_msgs::PoseStamped goal;
+    geometry_msgs::PoseArray goal;
+    geometry_msgs::Pose pose_;
     goal.header.frame_id = "/map";
     goal.header.stamp = ros::Time::now();
-    goal.pose.position.x = (robot_exploration.centroids[0].second*robot_exploration.map.info.resolution)+robot_exploration.map.info.origin.position.x;
-    goal.pose.position.y = (robot_exploration.centroids[0].first*robot_exploration.map.info.resolution)+robot_exploration.map.info.origin.position.y;
-    goal.pose.position.z = 0;
+    for (int i = 0; i < robot_exploration.centroids.size() ; i++)
+    {
+      pose_.position.x = (robot_exploration.centroids[i].second * robot_exploration.map.info.resolution) + robot_exploration.map.info.origin.position.x;
+      pose_.position.y = (robot_exploration.centroids[i].first*robot_exploration.map.info.resolution)+robot_exploration.map.info.origin.position.y;
+      pose_.position.z = 0;
+      goal.poses.push_back(pose_);
+    }
     //ROS_INFO("%d, %f, %f", robot_exploration.centroids[0].first, robot_exploration.map.info.resolution, robot_exploration.map.info.origin.position.x);
     // ROS_INFO("Centroid (x,y) map: %d, %d \t (x,y) rw: %f, %f  ", robot_exploration.centroids[0].first, robot_exploration.centroids[0].second, goal.pose.position.x, goal.pose.position.y);
 
     goal_pub.publish(goal);
+    goal.poses.clear();
     }
 
 

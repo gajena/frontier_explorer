@@ -18,7 +18,7 @@ private:
   PoseHandlers::PoseHandler& pose_handler_;
   bool isFrontierCell(std::vector<std::vector<int> > grid, int w_index, int h_index, int radius, int value_to_check = -1);
   bool isOnSameFrontier(std::vector<std::pair<int, int> > frontier, std::pair<int, int> candidate, float radius = sqrt(2.0));
-
+  void MapCoord(int x, int y, float x_coord, float y_coord);
 };
 
 }

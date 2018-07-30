@@ -76,7 +76,7 @@ int main(int argc, char **argv)
       }
     }
 
-    frontier_pub.publish(robot_exploration.frontiers_map);
+//    frontier_pub.publish(robot_exploration.frontiers_map);
     ros::spinOnce();
 
     if(!robot_exploration.centroids.empty()){

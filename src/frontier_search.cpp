@@ -127,7 +127,7 @@ std::vector<std::vector<std::pair<int, int>>> FrontierSearch::buildBidimensional
   //Remove small frontiers (single cell like). To improve: remove coherently with the robot size, based on the cell resolution of the map.
   for (int i = 0; i < frontiers.size(); i++)
   {
-    if (frontiers[i].size() < 15)
+    if (frontiers[i].size() < 5)
     {
       frontiers.erase(frontiers.begin() + i);
       i--;
@@ -221,24 +221,23 @@ std::vector<std::pair<int, int>> FrontierSearch::getCentroids(std::vector<std::v
     }
     x_centroid /= frontier.size();
     y_centroid /= frontier.size();
-    float dist = 1000000;
-    float x_temp = x_centroid;
-    float y_temp = y_centroid;
-    for (std::pair<int, int> cell : frontier)
-    {
-      float min_dist = sqrt(pow((x_temp - cell.first), 2) + pow((y_temp - cell.second), 2));
-      if (dist > min_dist)
-      {
-        dist = min_dist;
-        x_centroid = cell.first;
-        y_centroid = cell.second;
-      }
-    }
+   // float dist = 1000000;
+    //float x_temp = x_centroid;
+   /// float y_temp = y_centroid;
+   // for (std::pair<int, int> cell : frontier)
+    //{
+    //  float min_dist = sqrt(pow((x_temp - cell.first), 2) + pow((y_temp - cell.second), 2));
+     // if (dist > min_dist)
+     // {
+      //  dist = min_dist;
+       // x_centroid = cell.first;
+       // y_centroid = cell.second;
+     // }
+    //}
     centroids.push_back(std::pair<int, int>(x_centroid, y_centroid));
 
     float rwX = y_centroid * map_.info.resolution + map_.info.origin.position.x; //swapped because of a mess with the row major ordering......
     float rwY = x_centroid * map_.info.resolution + map_.info.origin.position.y;
-
     float distance = sqrt(pow(rwX - pose_x, 2) + pow(rwY - pose_y, 2));
     if (distance < min_distance)
     {

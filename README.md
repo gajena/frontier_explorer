@@ -45,3 +45,5 @@ real world experiment using a rotorcraft micro aerial vehicle. Analysis on the c
 complexity of the algorithm is provided and its good scaling properties enable the handling 
 of large scale and complex problem setups.
 ```
+## Credit
+initially inspired from: https://github.com/demplo/robot_exploration
